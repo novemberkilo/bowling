@@ -57,4 +57,20 @@ describe BowlingGame do
     game.score.should == 42
   end
 
+  it "scores a spare then a strike" do
+    # first frame is open
+    game.roll 5
+    game.roll 0
+    # next frame is a spare
+    game.roll 7
+    game.roll 3
+    # next frame is a strike
+    game.roll 10
+    # next frame is open
+    game.roll 2
+    game.roll 3
+    12.times { game.roll 0 }
+    game.score.should == 45
+  end
+
 end
