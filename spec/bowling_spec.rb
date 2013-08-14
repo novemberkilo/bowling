@@ -10,6 +10,30 @@
 
 require File.expand_path("../../bowling", __FILE__)
 
+describe Frame do
+
+  it "knows if it is an open frame" do
+    frame = Frame.new(2,4)
+    frame.type.should == :open
+    frame.first_roll.should   == 2
+    frame.second_roll.should  == 4
+  end
+
+  it "knows if it is a spare frame" do
+    frame = Frame.new(7,3)
+    frame.type.should == :spare
+    frame.first_roll.should   == 7
+    frame.second_roll.should  == 3
+  end
+
+  it "knows if it is a strike frame" do
+    frame = Frame.new(10, nil)
+    frame.type.should == :strike
+    frame.first_roll.should == 10
+    frame.second_roll.should == nil
+  end
+end
+
 describe BowlingGame do
 
   let(:game) { BowlingGame.new }
