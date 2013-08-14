@@ -12,7 +12,7 @@ require File.expand_path("../../bowling", __FILE__)
 
 describe BowlingGame do
 
-  let(:game) {  BowlingGame.new }
+  let(:game) { BowlingGame.new }
 
   it "scores 0 for a gutter ball game" do
     20.times { game.roll 0 }
@@ -25,7 +25,7 @@ describe BowlingGame do
     game.score.should == 30
   end
 
-  it "scores a  spare" do
+  it "scores a spare" do
     game.roll 7
     game.roll 3
     game.roll 5
@@ -39,6 +39,22 @@ describe BowlingGame do
     game.roll 3
     16.times { game.roll 0 }
     game.score.should == 26
+  end
+
+  it "scores a strike then a spare" do
+    # first frame is open
+    game.roll 5
+    game.roll 0
+    # next frame is a strike
+    game.roll 10
+    # next frame is a spare
+    game.roll 7
+    game.roll 3
+    # next frame is open
+    game.roll 2
+    game.roll 3
+    12.times { game.roll 0 }
+    game.score.should == 42
   end
 
 end

@@ -4,12 +4,15 @@ class BowlingGame
     @score = 0
     @previous_roll = 0
     @spare = false
+    @strike = false
   end
 
   def roll(pins)
     handle_spare(pins)
+    handle_strike(pins)
 
-    @spare = true if @previous_roll + pins == 10
+    @strike = true if pins == 10
+    @spare = true if !@strike && (@previous_roll + pins == 10)
     @score += pins
     @previous_roll = pins
   end
@@ -24,6 +27,13 @@ class BowlingGame
     return unless @spare
     @score += pins
     @spare = false
+  end
+
+  def handle_strike(pins)
+    return unless @strike
+    return if @previous_roll == 10
+    @score += pins + @previous_roll
+    @strike = false
   end
 
 end
