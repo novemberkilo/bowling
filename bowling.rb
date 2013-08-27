@@ -15,16 +15,7 @@ class BowlingGame
   def score
     raise StandardError, "Too many frames" if @frames.count > 10
     @frames.each_with_index do |f, i|
-      @score += case f.type
-                when :open
-                  f.first_roll + f.second_roll
-                when :spare
-                  10 + @frames[i+1].first_roll
-                when :strike
-                  10 + @frames[i+1].first_roll + @frames[i+1].second_roll
-                else
-                  raise StandardError, "Unkown frame type"
-                end
+      @score += f.score(@frames[i+1])
     end
     @score
   end
@@ -33,14 +24,15 @@ class BowlingGame
 
   def its_a_strike?(pins)
     return false unless pins == 10
-    @frames << Frame.new(10, nil)
+    @frames << Strike.new(10, nil)
     @previous_roll = nil
     true
   end
 
   def its_the_end_of_a_frame?(pins)
     return false unless @previous_roll
-    @frames << Frame.new(@previous_roll, pins)
+    klass = (pins + @previous_roll == 10) ? Spare : Frame
+    @frames << klass.new(@previous_roll, pins)
     @previous_roll = nil
     true
   end
@@ -56,11 +48,20 @@ class Frame
     @second_roll = second_roll
   end
 
-  def type
-    return :strike if first_roll == 10
-    return :spare if first_roll + second_roll == 10
-    :open
+  def score(next_frame=nil)
+    first_roll + second_roll
   end
 
 end
 
+class Spare < Frame
+  def score(next_frame)
+    10 + next_frame.first_roll
+  end
+end
+
+class Strike < Frame
+  def score(next_frame)
+    10 + next_frame.first_roll + next_frame.second_roll
+  end
+end
